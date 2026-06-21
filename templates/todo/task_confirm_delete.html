@@ -1,0 +1,20 @@
+{% extends 'todo/base.html' %}
+{% load static %}
+{% block title %}Delete Task — TaskFlow{% endblock %}
+{% block page_title %}Confirm Delete{% endblock %}
+
+{% block content %}
+<div class="empty-state" style="max-width: 500px; margin: 40px auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+    <div class="empty-icon" style="font-size: 48px;">⚠️</div>
+    <h3 class="empty-title" style="color: #e53e3e;">Are you sure?</h3>
+    <p class="empty-desc">You are about to permanently delete "<strong>{{ task.title }}</strong>". This cannot be undone.</p>
+    
+    <form method="post" style="margin-top: 24px;">
+        {% csrf_token %}
+        <div style="display: flex; gap: 12px; justify-content: center;">
+            <button type="submit" class="btn btn-danger">Yes, Delete</button>
+            <a href="" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

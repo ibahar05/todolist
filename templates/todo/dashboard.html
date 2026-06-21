@@ -1,0 +1,110 @@
+
+{% extends 'todo/base.html' %}
+{% load static %}
+{% load todo_tags %}
+
+{% block title %}Dashboard — TaskFlow{% endblock %}
+{% block page_title %}My Dashboard{% endblock %}
+
+{% block content %}
+  <div class="page-header">
+    <h2 id="greetingTitle">Good morning 👋</h2>
+    <p>Here's what's on your plate today.</p>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card total">
+      <div class="stat-icon">📋</div>
+      <div class="stat-content">
+        <div class="stat-label">Total Tasks</div>
+        <div class="stat-value" id="statTotal">{{ all_tasks }}</div>
+        <div class="stat-sub">all time</div>
+      </div>
+    </div>
+    <div class="stat-card done">
+      <div class="stat-icon">✅</div>
+      <div class="stat-content">
+        <div class="stat-label">Completed</div>
+        <div class="stat-value" id="statDone">{{ completed_tasks }}</div>
+        <div class="stat-sub" id="statDonePct">{{ completed_tasks|calculate_pct:all_tasks }}% done</div>
+      </div>
+    </div>
+    <div class="stat-card pending">
+      <div class="stat-icon">⏳</div>
+      <div class="stat-content">
+        <div class="stat-label">Pending</div>
+        <div class="stat-value" id="statPending">{{ pending_tasks }}</div>
+        <div class="stat-sub">still to do</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="task-controls">
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" class="search-input" id="searchInput" placeholder="Search tasks…" />
+      </div>
+
+      <div class="filter-tabs">
+
+          <a href="{% url 'todo:todo' %}"
+            class="filter-tab">
+            All
+          </a>
+
+          <a href="{% url 'todo:todo' %}?filter=active"
+            class="filter-tab">
+            Active
+          </a>
+
+          <a href="{% url 'todo:todo' %}?filter=completed"
+            class="filter-tab">
+            Completed
+          </a>
+
+      </div>
+
+    <button type="button" class="btn-add-task" id="addTaskBtn">
+        <span>＋</span> Add Task
+    </button>
+  </div>
+
+  {% include 'todo/task_form.html' %}
+
+  <div id="taskList" class="task-list">
+    {% for task in tasks %}
+    <div class="task-card {% if task.is_completed %}completed{% endif %}">
+        
+        <form method="POST" action="{% url 'todo:task-toggle' task.id %}" class="toggle-task-form" style="display:none;">
+            {% csrf_token %}
+        </form>
+
+        <div class="task-checkbox-wrap">
+            <input type="checkbox" class="task-checkbox" {% if task.is_completed %}checked{% endif %}>
+        </div>
+        
+        <div class="task-body">
+            <div class="task-title">{{ task.title }}</div>
+            <div class="task-meta">
+                <span class="task-date">Added {{ task.created_at|date:"M d, Y H:i" }}</span>
+            </div>
+        </div>
+        
+        <div class="task-actions">
+            <button type="button" 
+                    class="task-action-btn edit-task-btn" 
+                    data-url="{% url 'todo:update-task' task.id %}" 
+                    data-title="{{ task.title }}">
+                ✏️
+            </button>
+            <a href="{% url 'todo:delete-task' pk=task.id %}" class="task-action-btn delete">🗑️</a>
+        </div>
+    </div>
+    {% empty %}
+    <div class="empty-state">
+        <div class="empty-icon">📭</div>
+        <h3 class="empty-title">No tasks yet</h3>
+    </div>
+    {% endfor %}
+  </div>
+{% endblock %}

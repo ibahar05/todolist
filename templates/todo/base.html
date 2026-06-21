@@ -1,0 +1,92 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}TaskFlow{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{% static 'todo/css/style.css' %}" />
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">✦</div>
+      <div class="logo-text">Task<span>Flow</span></div>
+    </div>
+
+    <p class="sidebar-section-label">Workspace</p>
+
+    <nav class="sidebar-nav">
+      <div class="nav-item active" data-filter="all">
+        <span class="nav-icon">⊞</span> All Tasks
+        <span class="nav-badge" id="navBadgeAll">{{ all_tasks }}</span>
+      </div>
+      <div class="nav-item" data-filter="active">
+        <span class="nav-icon">◷</span> Active
+        <span class="nav-badge" id="navBadgeActive">{{ pending_tasks }}</span>
+      </div>
+      <div class="nav-item" data-filter="completed">
+        <span class="nav-icon">✓</span> Completed
+        <span class="nav-badge" id="navBadgeDone">{{ completed_tasks }}</span>
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-profile">
+        <div class="user-avatar" id="sidebarAvatar">?</div>
+        <div class="user-info">
+          <div class="user-name"  id="sidebarName">Loading…</div>
+          <div class="user-email" id="sidebarEmail">—</div>
+        </div>
+        <button class="logout-btn" id="logoutBtn" title="Sign out">⏻</button>
+      </div>
+    </div>
+  </aside>
+
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <div class="main-content">
+
+    <header class="navbar">
+      <div class="navbar-left">
+        <button class="menu-toggle btn" id="menuToggle" aria-label="Toggle sidebar">☰</button>
+        <span class="navbar-title">{% block page_title %}Dashboard{% endblock %}</span>
+      </div>
+      <div class="navbar-right">
+        <span class="navbar-date" id="navbarDate">—</span>
+        <button class="btn btn-ghost btn-icon" id="navLogout" title="Sign out">⏻</button>
+      </div>
+    </header>
+
+    <main class="page-content">
+      {% block content %}
+      {% endblock %}
+    </main>
+
+  </div><div class="modal-overlay" id="deleteModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal">
+      <div class="modal-icon">🗑️</div>
+      <h3 class="modal-title" id="modalTitle">Delete task?</h3>
+      <p class="modal-body">
+        You're about to permanently delete
+        <span class="modal-task-name" id="modalTaskName">"Task"</span>.
+        This action can't be undone.
+      </p>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" id="cancelDelete">Keep it</button>
+        <button class="btn btn-danger"    id="confirmDelete">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="{% static 'todo/js/app.js' %}"></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

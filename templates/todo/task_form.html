@@ -1,0 +1,22 @@
+<form method="POST" action="" class="add-task-form hidden" id="addTaskForm">
+  {% csrf_token %}
+  <div class="form-row">
+    <div class="form-group">
+      <label for="newTaskInput">Task name</label>
+      <input
+        type="text"
+        id="newTaskInput"
+        name="title"
+        class="form-input"
+        placeholder="What do you need to do?"
+        maxlength="200"
+        required
+        autocomplete="off"
+      />
+    </div>
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary" id="saveNewTask">Save</button>
+      <button type="button" class="btn btn-secondary" id="cancelNewTask">Cancel</button>
+    </div>
+  </div>
+</form>
