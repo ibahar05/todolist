@@ -22,28 +22,33 @@
     <p class="sidebar-section-label">Workspace</p>
 
     <nav class="sidebar-nav">
-      <div class="nav-item active" data-filter="all">
-        <span class="nav-icon">⊞</span> All Tasks
-        <span class="nav-badge" id="navBadgeAll">{{ all_tasks }}</span>
-      </div>
-      <div class="nav-item" data-filter="active">
-        <span class="nav-icon">◷</span> Active
-        <span class="nav-badge" id="navBadgeActive">{{ pending_tasks }}</span>
-      </div>
-      <div class="nav-item" data-filter="completed">
-        <span class="nav-icon">✓</span> Completed
-        <span class="nav-badge" id="navBadgeDone">{{ completed_tasks }}</span>
-      </div>
+      <a href="{% url 'todo:todo' %}" 
+        class="nav-item {% if not request.GET.filter %}active{% endif %}">
+          <span class="nav-icon">⊞</span> All Tasks
+          <span class="nav-badge" id="navBadgeAll">{{ all_tasks }}</span>
+      </a>
+
+      <a href="{% url 'todo:todo' %}?filter=active" 
+        class="nav-item {% if request.GET.filter == 'active' %}active{% endif %}">
+          <span class="nav-icon">◷</span> Active
+          <span class="nav-badge" id="navBadgeActive">{{ pending_tasks }}</span>
+      </a>
+
+      <a href="{% url 'todo:todo' %}?filter=completed" 
+        class="nav-item {% if request.GET.filter == 'completed' %}active{% endif %}">
+          <span class="nav-icon">✓</span> Completed
+          <span class="nav-badge" id="navBadgeDone">{{ completed_tasks }}</span>
+      </a>
     </nav>
 
     <div class="sidebar-footer">
       <div class="user-profile">
-        <div class="user-avatar" id="sidebarAvatar">?</div>
-        <div class="user-info">
-          <div class="user-name"  id="sidebarName">Loading…</div>
-          <div class="user-email" id="sidebarEmail">—</div>
+        <div class="user-avatar" id="sidebarAvatar">
+          <img src="{% static 'todo/img/profile.png' %}" alt="Profile" style="width: 20px; height: 20px; border-radius: 50%; object-fit: cover;">
         </div>
-        <button class="logout-btn" id="logoutBtn" title="Sign out">⏻</button>
+        <div class="user-info">
+          <div class="user-name"  id="sidebarName">{{user.username}}</div>
+        </div>
       </div>
     </div>
   </aside>
@@ -58,8 +63,13 @@
         <span class="navbar-title">{% block page_title %}Dashboard{% endblock %}</span>
       </div>
       <div class="navbar-right">
-        <span class="navbar-date" id="navbarDate">—</span>
-        <button class="btn btn-ghost btn-icon" id="navLogout" title="Sign out">⏻</button>
+        <span class="navbar-date" id="navbarDate">{% now "D-N-d" %}</span>
+        <form action="{% url 'account:logout' %}" method="POST" style="display: inline;">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-ghost" title="Sign out" style="display: flex; align-items: center; gap: 8px;">
+            <span>Logout</span>
+          </button>
+        </form>
       </div>
     </header>
 

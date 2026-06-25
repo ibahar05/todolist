@@ -1,0 +1,131 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TaskFlow — Sign In</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{% static 'todo/css/style.css' %}" />
+</head>
+<body class="auth-page">
+
+  <div class="auth-card">
+
+    <div class="auth-logo">
+      <div class="logo-icon">✦</div>
+      <div class="logo-text">Task<span>Flow</span></div>
+    </div>
+
+    <h1 class="auth-title">Welcome back</h1>
+    <p class="auth-subtitle">Sign in to your workspace to continue.</p>
+
+    <form id="loginForm" method="POST" novalidate>
+      {% csrf_token %}
+
+      <div class="form-group">
+        <label for="id_username">Username</label>
+        {{ form.username }}
+        <span class="form-error" id="usernameError">Please enter your username.</span>
+      </div>
+
+      <div class="form-group">
+        <label for="id_password">Password</label>
+        {{ form.password }}
+        <span class="form-error" id="passwordError">Password must be at least 6 characters.</span>
+      </div>
+
+      <div class="form-error {% if error %}visible{% endif %}" id="authError" style="margin-bottom:1rem; font-size:.875rem;">
+        {% if error %}{{ error }}{% endif %}
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-full btn-lg" id="loginBtn">
+        Sign in
+      </button>
+
+    </form>
+
+    <div class="divider">or</div>
+
+    <button class="btn btn-secondary btn-full" id="demoBtn">
+      🚀 &nbsp; Continue with demo account
+    </button>
+
+    <p class="auth-link">
+      Don't have an account? <a href="register.html">Create one free</a>
+    </p>
+
+  </div><div class="toast-container" id="toastContainer"></div>
+
+  <script src="{% static 'todo/js/app.js' %}"></script>
+  <script>
+    /* ---- Login page init ---- */
+    document.addEventListener('DOMContentLoaded', () => {
+
+      const form        = document.getElementById('loginForm');
+      // المنت‌های تولید شده توسط فرم جنگو را با IDهای خودشان می‌گیریم
+      const userInput   = document.getElementById('id_username');
+      const passInput   = document.getElementById('id_password');
+      const userErr     = document.getElementById('usernameError');
+      const passErr     = document.getElementById('passwordError');
+      const authErr     = document.getElementById('authError');
+
+      // تزریق کلاس‌های سی‌اس‌اس قالب به اینپوت‌های جنگو برای حفظ ظاهر کامپوننت‌ها
+      if (userInput) {
+        userInput.classList.add('form-input');
+        userInput.setAttribute('placeholder', 'Enter your username');
+      }
+      if (passInput) {
+        passInput.classList.add('form-input');
+        passInput.setAttribute('placeholder', '••••••••');
+      }
+
+      // پاک کردن خطاها به محض شروع تایپ کاربر
+      if (userInput) userInput.addEventListener('input', () => clearError(userInput, userErr));
+      if (passInput) passInput.addEventListener('input',  () => clearError(passInput,  passErr));
+
+      // مدیریت سابمیت فرم
+      form.addEventListener('submit', (e) => {
+        let valid = true;
+
+        const username = userInput.value.trim();
+        const pass  = passInput.value;
+
+        // بررسی خالی نبودن یوزرنیم
+        if (username.length === 0) {
+          showError(userInput, userErr);
+          valid = false;
+        }
+
+        // بررسی طول پسورد
+        if (pass.length < 6) {
+          showError(passInput, passErr);
+          valid = false;
+        }
+
+        // اگر جاوااسکریپت خطایی گرفت، مانع ارسال فرم به جنگو شو
+        if (!valid) {
+          e.preventDefault();
+          return;
+        }
+        
+        // اگر اعتبارسنجی موفق بود، e.preventDefault اجرا نمی‌شود 
+        // و مرورگر فرم را به اکشنِ ویوی جنگو ارسال (Post) می‌کند.
+      });
+
+      // دکمه ورود دمو
+      document.getElementById('demoBtn').addEventListener('click', (e) => {
+        e.preventDefault();
+        if (userInput && passInput) {
+          userInput.value = 'demo_user';
+          passInput.value  = 'demo1234';
+          form.dispatchEvent(new Event('submit'));
+        }
+      });
+
+    });
+  </script>
+</body>
+</html>

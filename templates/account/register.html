@@ -1,0 +1,134 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TaskFlow — Create Account</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{% static 'todo/css/style.css' %}" />
+</head>
+<body class="auth-page">
+
+  <!-- ===== REGISTER CARD ===== -->
+  <div class="auth-card">
+
+    <!-- Logo -->
+    <div class="auth-logo">
+      <div class="logo-icon">✦</div>
+      <div class="logo-text">Task<span>Flow</span></div>
+    </div>
+
+    <!-- Heading -->
+    <h1 class="auth-title">Create account</h1>
+    <p class="auth-subtitle">Start managing your tasks — it's completely free.</p>
+
+    <!-- Form -->
+    <form id="registerForm" method="POST" novalidate>
+      {% csrf_token %}
+
+      <div class="form-group">
+        <label for="regName">Username</label>
+        <input
+          type="text"
+          id="regName"
+          name="username"
+          class="form-input"
+          placeholder="Choose a username"
+          autocomplete="off"
+          value="{{ request.POST.username|default:'' }}"
+        />
+        <span class="form-error" id="nameError">Username must be at least 3 characters.</span>
+      </div>
+
+      <div class="form-group">
+        <label for="regPassword">Password</label>
+        <input
+          type="password"
+          id="regPassword"
+          name="password1"
+          class="form-input"
+          placeholder="At least 6 characters"
+          autocomplete="new-password"
+        />
+        <span class="form-error" id="passError">Password must be at least 6 characters.</span>
+      </div>
+
+      <div class="form-group">
+        <label for="regConfirm">Confirm password</label>
+        <input
+          type="password"
+          id="regConfirm"
+          name="password2"
+          class="form-input"
+          placeholder="Repeat your password"
+          autocomplete="new-password"
+        />
+        <span class="form-error" id="confirmError">Passwords don't match.</span>
+      </div>
+
+      {% if form.errors %}
+        <div class="form-error visible" style="margin-bottom:1rem; font-size:.875rem; display:block;">
+          {% for field in form %}
+            {% if field.errors %}{{ field.errors.0 }}{% endif %}
+          {% endfor %}
+          {{ form.non_field_errors.0 }}
+        </div>
+      {% endif %}
+
+      <button type="submit" class="btn btn-primary btn-full btn-lg">
+        Create account
+      </button>
+
+    </form>
+
+    <p class="auth-link">
+      Already have an account? <a href="login.html">Sign in</a>
+    </p>
+
+  </div><!-- /auth-card -->
+
+  <!-- Toast container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="{% static 'todo/js/app.js' %}"></script>
+  <script>
+    /* ---- Register page init ---- */
+    document.addEventListener('DOMContentLoaded', () => {
+
+      const form         = document.getElementById('registerForm');
+      const nameInput   = document.getElementById('regName');
+      const passInput   = document.getElementById('regPassword');
+      const confirmInput= document.getElementById('regConfirm');
+
+      const nameErr     = document.getElementById('nameError');
+      const passErr     = document.getElementById('passError');
+      const confirmErr  = document.getElementById('confirmError');
+
+      // پاک کردن ارورها با شروع تایپ
+      nameInput.addEventListener('input',    () => clearError(nameInput,    nameErr));
+      passInput.addEventListener('input',    () => clearError(passInput,    passErr));
+      confirmInput.addEventListener('input', () => clearError(confirmInput, confirmErr));
+
+      form.addEventListener('submit', (e) => {
+        let valid = true;
+
+        const username = nameInput.value.trim();
+        const pass    = passInput.value;
+        const confirm = confirmInput.value;
+
+        if (username.length < 3) { showError(nameInput, nameErr); valid = false; }
+        if (pass.length < 6)  { showError(passInput, passErr); valid = false; }
+        if (pass !== confirm)  { showError(confirmInput, confirmErr); valid = false; }
+
+        if (!valid) {
+          e.preventDefault(); // اگر ولیدیشن فرانت ایراد داشت، فرم فرستاده نشود
+          return;
+        }
+      });
+    });
+  </script>
+</body>
+</html>
