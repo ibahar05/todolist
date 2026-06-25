@@ -6,6 +6,7 @@ from .seializer import TaskSerializer
 from django.shortcuts import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
+from rest_framework.generics import GenericAPIView
 
 
 '''@api_view(["GET","POST"])
@@ -25,7 +26,7 @@ def tasklist(request):
     '''
 #---------------------------------------------------------------------------
 
-class TaskList(APIView):
+'''class TaskList(APIView):
     """V2 of task list view"""
     permission_classes = [IsAuthenticated]
     serializer_class = TaskSerializer
@@ -39,8 +40,32 @@ class TaskList(APIView):
         serializer = TaskSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
+        return Response(serializer.data)'''
+    
+#---------------------------------------------------------------------------
+class TaskList(GenericAPIView):
+    """ V3 of task list view"""
+    permission_classes = [IsAuthenticated]
+    serializer_class = TaskSerializer
+    queryset = Task.objects.all()
+
+    def get(self, request):
+        queryset = self.get_queryset()
+        seializer = self.serializer_class(queryset, many=True)
+        return Response(seializer.data)
+    
+    def post(self, request):
+        serializer = self.serializer_class(data = request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
         return Response(serializer.data)
     
+#-----------------------------------------------------------------------------------
+
+
+
+
+
 #---------------------------------------------------------------------------
     
 '''@api_view(["GET","PUT", "DELETE"])
@@ -64,7 +89,7 @@ def taskdetail(request, id):
 
 #------------------------------------------------------------------------------------------------------
 
-class TaskDetail(APIView):
+'''class TaskDetail(APIView):
     """ V2 of task detail view"""
     permission_classes = [IsAuthenticated]
     serializer_class = TaskSerializer
@@ -84,9 +109,7 @@ class TaskDetail(APIView):
     def delete(self, request,id):
         task = get_object_or_404(Task, pk=id, user=request.user)
         task.delete()
-        return Response({"detail":"task deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
-
-
+        return Response({"detail":"task deleted successfully"}, status=status.HTTP_204_NO_CONTENT)'''
 
 
 
