@@ -6,8 +6,9 @@ from .seializer import TaskSerializer
 from django.shortcuts import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
-from rest_framework.generics import GenericAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView, R
+from rest_framework.generics import GenericAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework import mixins
+from rest_framework import viewsets
 
 
 '''@api_view(["GET","POST"])
@@ -77,12 +78,12 @@ def tasklist(request):
 
 #---------------------------------------------------------------------------
 
-class TaskList(ListCreateAPIView):
+'''class TaskList(ListCreateAPIView):
     """ V5 of task list view and the easiest"""
     permission_classes = [IsAuthenticated]
     serializer_class = TaskSerializer
     queryset = Task.objects.all()
-
+'''
 #---------------------------------------------------------------------------
     
 '''@api_view(["GET","PUT", "DELETE"])
@@ -147,11 +148,23 @@ def taskdetail(request, id):
 
 #---------------------------------------------------------------------------------------------------------------
     
-class TaskDetail(RetrieveUpdateDestroyAPIView):
+'''class TaskDetail(RetrieveUpdateDestroyAPIView):
     """ V4 of task detail view and the easiest"""
     permission_classes = [IsAuthenticated]
     serializer_class = TaskSerializer
     queryset = Task.objects.all()
+
+'''
+#--------------------------------------------------------------
+
+class TaskModelViewSet(viewsets.ModelViewSet):
+    ''' Final Task view '''
+    permission_classes = [IsAuthenticated]
+    serializer_class = TaskSerializer
+    queryset = Task.objects.all()
+
+
+
 
 
     
