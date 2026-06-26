@@ -6,7 +6,8 @@ from .seializer import TaskSerializer
 from django.shortcuts import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
-from rest_framework.generics import GenericAPIView
+from rest_framework.generics import GenericAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView, R
+from rest_framework import mixins
 
 
 '''@api_view(["GET","POST"])
@@ -43,7 +44,7 @@ def tasklist(request):
         return Response(serializer.data)'''
     
 #---------------------------------------------------------------------------
-class TaskList(GenericAPIView):
+'''class TaskList(GenericAPIView):
     """ V3 of task list view"""
     permission_classes = [IsAuthenticated]
     serializer_class = TaskSerializer
@@ -58,13 +59,29 @@ class TaskList(GenericAPIView):
         serializer = self.serializer_class(data = request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response(serializer.data)
+        return Response(serializer.data)'''
     
 #-----------------------------------------------------------------------------------
 
+'''class TaskList(GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
+    """ V4 of task list view"""
+    permission_classes = [IsAuthenticated]
+    serializer_class = TaskSerializer
+    queryset = Task.objects.all()
 
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+    
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)'''
 
+#---------------------------------------------------------------------------
 
+class TaskList(ListCreateAPIView):
+    """ V5 of task list view and the easiest"""
+    permission_classes = [IsAuthenticated]
+    serializer_class = TaskSerializer
+    queryset = Task.objects.all()
 
 #---------------------------------------------------------------------------
     
@@ -111,6 +128,37 @@ def taskdetail(request, id):
         task.delete()
         return Response({"detail":"task deleted successfully"}, status=status.HTTP_204_NO_CONTENT)'''
 
+#-------------------------------------------------------------------------------------------------------------
+
+'''class TaskDetail(GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin):
+    """ V3 of post detail view"""
+    permission_classes = [IsAuthenticated]
+    serializer_class = TaskSerializer
+    queryset = Task.objects.all()
+
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
+    
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+    
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)'''
+
+#---------------------------------------------------------------------------------------------------------------
+    
+class TaskDetail(RetrieveUpdateDestroyAPIView):
+    """ V4 of task detail view and the easiest"""
+    permission_classes = [IsAuthenticated]
+    serializer_class = TaskSerializer
+    queryset = Task.objects.all()
+
+
+    
+
+    
+
+    
 
 
         
