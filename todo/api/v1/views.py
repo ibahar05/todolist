@@ -9,6 +9,7 @@ from rest_framework.views import APIView
 from rest_framework.generics import GenericAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework import mixins
 from rest_framework import viewsets
+from .permission import IsOwnerOrReadOnly
 
 
 '''@api_view(["GET","POST"])
@@ -159,7 +160,7 @@ def taskdetail(request, id):
 
 class TaskModelViewSet(viewsets.ModelViewSet):
     ''' Final Task view '''
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
     serializer_class = TaskSerializer
     queryset = Task.objects.all()
 
