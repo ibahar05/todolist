@@ -10,6 +10,8 @@ from rest_framework.generics import GenericAPIView, ListCreateAPIView, RetrieveU
 from rest_framework import mixins
 from rest_framework import viewsets
 from .permission import IsOwnerOrReadOnly
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter, OrderingFilter
 
 
 '''@api_view(["GET","POST"])
@@ -163,6 +165,11 @@ class TaskModelViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
     serializer_class = TaskSerializer
     queryset = Task.objects.all()
+    filter_backends = [DjangoFilterBackend,SearchFilter, OrderingFilter]
+    filterset_fields = ["user","is_completed"]
+    search_fields = ["title"]
+    ordering_fields = ["created_at"]
+
 
 
 
