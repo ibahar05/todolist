@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'todo',
     'account',
     "rest_framework",
-    "django_filters"
+    "django_filters",
 ]
 
 MIDDLEWARE = [
@@ -130,3 +130,5 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 
 LOGIN_REDIRECT_URL = 'todo:todo'
+
+

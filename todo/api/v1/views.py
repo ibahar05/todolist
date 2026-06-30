@@ -12,6 +12,7 @@ from rest_framework import viewsets
 from .permission import IsOwnerOrReadOnly
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
+from .paginations import DefaultPagination
 
 
 '''@api_view(["GET","POST"])
@@ -169,6 +170,7 @@ class TaskModelViewSet(viewsets.ModelViewSet):
     filterset_fields = ["user","is_completed"]
     search_fields = ["title"]
     ordering_fields = ["created_at"]
+    pagination_class = DefaultPagination
 
 
 

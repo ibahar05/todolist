@@ -3,11 +3,10 @@ from ...models import Task
 
 class TaskSerializer(serializers.ModelSerializer):
     absolute_url = serializers.SerializerMethodField()
-    user = serializers.CharField(source= "username")
+    user = serializers.CharField(source= "username", read_only=True)
     class Meta:
         model = Task
         fields = "__all__"
-        read_only_fields = ["user"]
 
     def get_absolute_url(self,obj):
         request = self.context.get('request')
@@ -21,5 +20,6 @@ class TaskSerializer(serializers.ModelSerializer):
         return rep
     
     def create(self, validated_data):
-        validated_data["user"] = Task.objects.get(user__id = self.context.get("request").user.id)
+        validated_data["user"] = self.context["request"].user
+        return super().create(validated_data)
     
