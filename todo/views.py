@@ -9,7 +9,6 @@ class TaskListView(LoginRequiredMixin,ListView):
     model = Task
     template_name = "todo/dashboard.html"
     context_object_name = "tasks"
-    login_url = "account:login"
 
     def get_queryset(self):
         task = Task.objects.filter(user=self.request.user)
@@ -37,7 +36,7 @@ class TaskListView(LoginRequiredMixin,ListView):
         return context
 
 
-class CreateTaskView(CreateView):
+class CreateTaskView(LoginRequiredMixin,CreateView):
     model = Task
     form_class = TaskForm
     # بعد از ساخت موفق، کاربر به صفحه اصلی دشبورد بازمی‌گردد
@@ -48,17 +47,17 @@ class CreateTaskView(CreateView):
         return super().form_valid(form)
     
 
-class DeleteTaskView(DeleteView):
+class DeleteTaskView(LoginRequiredMixin,DeleteView):
     model = Task
     success_url = reverse_lazy("todo:todo")
 
-class UpdateTaskView(UpdateView):
+class UpdateTaskView(LoginRequiredMixin,UpdateView):
     model = Task
     form_class = TaskForm
     context_object_name = "tasks"
     success_url = reverse_lazy("todo:todo")
 
-class ToggleTaskView(View):
+class ToggleTaskView(LoginRequiredMixin,View):
     def post(self, request, pk):
         task = get_object_or_404(Task, pk=pk, user=request.user)
         task.is_completed = not task.is_completed  
