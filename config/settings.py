@@ -130,5 +130,6 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 
 LOGIN_REDIRECT_URL = 'todo:todo'
+login_url = "account:login"
 
 

@@ -3,11 +3,13 @@ from django.views.generic import ListView, CreateView, DeleteView, UpdateView, V
 from .models import Task
 from .forms import TaskForm
 from django.urls import reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin
 
-class TaskListView(ListView):
+class TaskListView(LoginRequiredMixin,ListView):
     model = Task
     template_name = "todo/dashboard.html"
     context_object_name = "tasks"
+    login_url = "account:login"
 
     def get_queryset(self):
         task = Task.objects.filter(user=self.request.user)
