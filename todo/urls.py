@@ -10,4 +10,5 @@ urlpatterns = [
     path("task/delete/<int:pk>/",views.DeleteTaskView.as_view(),name="delete-task"),
     path("task/update/<int:pk>/",views.UpdateTaskView.as_view(),name="update-task"),
     path("task/toggle<int:pk>/",views.ToggleTaskView.as_view(),name="task-toggle"),
+    path("api/v1/", include("todo.api.v1.urls")),
 ]

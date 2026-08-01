@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'account',
     "rest_framework",
     "django_filters",
+    'drf_yasg',
+    'mail_templated',
 ]
 
 MIDDLEWARE = [
@@ -131,5 +133,19 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 LOGIN_REDIRECT_URL = 'todo:todo'
 login_url = "account:login"
+AUTH_USER_MODEL = 'account.User'
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+
+EMAIL_HOST = "localhost"
+EMAIL_PORT = 25
+
+EMAIL_HOST_USER = ""
+EMAIL_HOST_PASSWORD = ""
+
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = False
+
+DEFAULT_FROM_EMAIL = "noreply@example.com"
 
 
