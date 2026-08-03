@@ -1,6 +1,6 @@
 from rest_framework.response import Response
 from rest_framework import generics
-from .serializers import RegisterSerializer,ResendVerificationSerializer, ChangePasswordSerializer
+from .serializers import RegisterSerializer,ResendVerificationSerializer, ChangePasswordSerializer, CustomObtainPairSerializer
 from django.shortcuts import get_object_or_404
 from ...models import User
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -11,6 +11,7 @@ from rest_framework.views import APIView
 import jwt 
 from django.conf import settings
 from jwt import ExpiredSignatureError, InvalidSignatureError
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 
 class RegisterAPIView(generics.GenericAPIView):
@@ -81,6 +82,9 @@ class ChangePasswordAPIView(generics.GenericAPIView):
             user.save()
             return Response({"detail":"Password changed successfully"}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class CustomObtainPairView(TokenObtainPairView):
+    serializer_class = CustomObtainPairSerializer
 
         
         
