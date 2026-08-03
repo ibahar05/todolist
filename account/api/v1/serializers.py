@@ -25,20 +25,39 @@ class RegisterSerializer(serializers.ModelSerializer):
         validated_data.pop("password1",None)
         return User.objects.create_user(**validated_data)
 
-
-class ResendActivationSerializer(serializers.Serializer):
+class ResendVerificationSerializer(serializers.Serializer):
     email = serializers.EmailField(required=True)
 
     def validate(self, attrs):
         email = attrs.get("email")
         try:
             user_obj = User.objects.get(email=email)
-
         except User.DoesNotExist:
             raise serializers.ValidationError({"detail":"User does not exist"})
         if user_obj.is_verified:
             raise serializers.ValidationError({"detail":"User is verified already"})
         attrs["user_obj"] = user_obj
         return super().validate(attrs)
+
+class ChangePasswordSerializer(serializers.Serializer):
+    old_password = serializers.CharField(required=True)
+    new_password1 = serializers.CharField(required=True)
+    new_password2 = serializers.CharField(required=True)
+
+    def validate(self, attrs):
+        if attrs.get("new_password1")!= attrs.get("new_password2"):
+            raise serializers.ValidationError({"detail":"wrong password"})
+        try:
+            validate_password(attrs.get("new_password1"))
+        except exceptions.ValidationError as e:
+            raise serializers.ValidationError({"new_password":list(e.messages)})
+        
+        return super().validate(attrs)
+
+
+    
+
+    
+                
         
         
