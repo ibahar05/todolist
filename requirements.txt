@@ -9,3 +9,6 @@ ref-yasg
 django-mail-templated
 
 black
+
+pytest 
+pytest-django

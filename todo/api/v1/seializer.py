@@ -4,7 +4,7 @@ from ...models import Task
 
 class TaskSerializer(serializers.ModelSerializer):
     absolute_url = serializers.SerializerMethodField()
-    user = serializers.CharField(source="username", read_only=True)
+    user = serializers.CharField(source="user.username", read_only=True)
 
     class Meta:
         model = Task
