@@ -2,9 +2,9 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from . import views
 
-app_name="api-v1"
+app_name = "api-v1"
 router = DefaultRouter()
-router.register('tasks',views.TaskModelViewSet, basename="tasks")
+router.register("tasks", views.TaskModelViewSet, basename="tasks")
 urlpatterns = router.urls
 
 

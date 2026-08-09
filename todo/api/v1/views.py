@@ -6,14 +6,17 @@ from .seializer import TaskSerializer
 from django.shortcuts import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
-from rest_framework.generics import GenericAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.generics import (
+    GenericAPIView,
+    ListCreateAPIView,
+    RetrieveUpdateDestroyAPIView,
+)
 from rest_framework import mixins
 from rest_framework import viewsets
 from .permission import IsOwnerOrReadOnly
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
 from .paginations import DefaultPagination
-
 
 '''@api_view(["GET","POST"])
 @permission_classes([IsAuthenticated])
@@ -30,7 +33,7 @@ def tasklist(request):
         serializer.save()
         return Response(serializer.data)
     '''
-#---------------------------------------------------------------------------
+# ---------------------------------------------------------------------------
 
 '''class TaskList(APIView):
     """V2 of task list view"""
@@ -47,8 +50,8 @@ def tasklist(request):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)'''
-    
-#---------------------------------------------------------------------------
+
+# ---------------------------------------------------------------------------
 '''class TaskList(GenericAPIView):
     """ V3 of task list view"""
     permission_classes = [IsAuthenticated]
@@ -65,8 +68,8 @@ def tasklist(request):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)'''
-    
-#-----------------------------------------------------------------------------------
+
+# -----------------------------------------------------------------------------------
 
 '''class TaskList(GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
     """ V4 of task list view"""
@@ -80,7 +83,7 @@ def tasklist(request):
     def post(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)'''
 
-#---------------------------------------------------------------------------
+# ---------------------------------------------------------------------------
 
 '''class TaskList(ListCreateAPIView):
     """ V5 of task list view and the easiest"""
@@ -88,8 +91,8 @@ def tasklist(request):
     serializer_class = TaskSerializer
     queryset = Task.objects.all()
 '''
-#---------------------------------------------------------------------------
-    
+# ---------------------------------------------------------------------------
+
 '''@api_view(["GET","PUT", "DELETE"])
 @permission_classes([IsAuthenticated])
 def taskdetail(request, id):
@@ -109,7 +112,7 @@ def taskdetail(request, id):
         task.delete()
         return Response({"detail":"task deleted successfully"}, status=status.HTTP_204_NO_CONTENT)'''
 
-#------------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------------------------------
 
 '''class TaskDetail(APIView):
     """ V2 of task detail view"""
@@ -133,7 +136,7 @@ def taskdetail(request, id):
         task.delete()
         return Response({"detail":"task deleted successfully"}, status=status.HTTP_204_NO_CONTENT)'''
 
-#-------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------
 
 '''class TaskDetail(GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin):
     """ V3 of post detail view"""
@@ -150,8 +153,8 @@ def taskdetail(request, id):
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)'''
 
-#---------------------------------------------------------------------------------------------------------------
-    
+# ---------------------------------------------------------------------------------------------------------------
+
 '''class TaskDetail(RetrieveUpdateDestroyAPIView):
     """ V4 of task detail view and the easiest"""
     permission_classes = [IsAuthenticated]
@@ -159,29 +162,17 @@ def taskdetail(request, id):
     queryset = Task.objects.all()
 
 '''
-#--------------------------------------------------------------
+# --------------------------------------------------------------
+
 
 class TaskModelViewSet(viewsets.ModelViewSet):
-    ''' Final Task view '''
+    """Final Task view"""
+
     permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
     serializer_class = TaskSerializer
     queryset = Task.objects.all()
-    filter_backends = [DjangoFilterBackend,SearchFilter, OrderingFilter]
-    filterset_fields = ["user","is_completed"]
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_fields = ["user", "is_completed"]
     search_fields = ["title"]
     ordering_fields = ["created_at"]
     pagination_class = DefaultPagination
-
-
-
-
-
-
-    
-
-    
-
-    
-
-
-        
