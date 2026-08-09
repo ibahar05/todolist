@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ...models import User 
+from ...models import User
 from django.contrib.auth.password_validation import validate_password
 from django.core import exceptions
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -61,6 +61,10 @@ class CustomObtainPairSerializer(TokenObtainPairSerializer):
         validated_data["email"] = self.user.email
         validated_data["user_id"] = self.user.id
         return validated_data
+
+
+
+
 
 
 
