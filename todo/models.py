@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from account.models import User
 
 
 class Task(models.Model):
@@ -8,3 +8,6 @@ class Task(models.Model):
     is_completed = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def username(self):
+        return self.user.username

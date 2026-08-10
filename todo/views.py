@@ -3,8 +3,10 @@ from django.views.generic import ListView, CreateView, DeleteView, UpdateView, V
 from .models import Task
 from .forms import TaskForm
 from django.urls import reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin
 
-class TaskListView(ListView):
+
+class TaskListView(LoginRequiredMixin, ListView):
     model = Task
     template_name = "todo/dashboard.html"
     context_object_name = "tasks"
@@ -21,7 +23,7 @@ class TaskListView(ListView):
             task = task.filter(is_completed=True)
 
         return task
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
@@ -35,31 +37,33 @@ class TaskListView(ListView):
         return context
 
 
-class CreateTaskView(CreateView):
+class CreateTaskView(LoginRequiredMixin, CreateView):
     model = Task
     form_class = TaskForm
     # بعد از ساخت موفق، کاربر به صفحه اصلی دشبورد بازمی‌گردد
-    success_url = reverse_lazy('todo:todo') 
+    success_url = reverse_lazy("todo:todo")
 
     def form_valid(self, form):
         form.instance.user = self.request.user
         return super().form_valid(form)
-    
 
-class DeleteTaskView(DeleteView):
+
+class DeleteTaskView(LoginRequiredMixin, DeleteView):
     model = Task
     success_url = reverse_lazy("todo:todo")
 
-class UpdateTaskView(UpdateView):
+
+class UpdateTaskView(LoginRequiredMixin, UpdateView):
     model = Task
     form_class = TaskForm
     context_object_name = "tasks"
     success_url = reverse_lazy("todo:todo")
 
-class ToggleTaskView(View):
+
+class ToggleTaskView(LoginRequiredMixin, View):
     def post(self, request, pk):
         task = get_object_or_404(Task, pk=pk, user=request.user)
-        task.is_completed = not task.is_completed  
+        task.is_completed = not task.is_completed
         task.save()
-        
+
         return redirect("todo:todo")
