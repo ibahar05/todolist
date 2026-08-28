@@ -16,3 +16,6 @@ pytest
 pytest-django
 
 Faker
+
+celery
+redis
