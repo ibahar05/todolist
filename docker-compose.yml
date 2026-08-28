@@ -1,0 +1,44 @@
+services:
+  redis:
+    container_name: todo_redis
+    image: redis
+    ports:
+      - "6379:6379"
+    command: redis-server --save 60 1 --loglevel warning
+
+  backend:
+    build: .
+    container_name: todo_backend
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+  
+  worker:
+    build: .
+    command: celery -A config worker --loglevel=info
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
+      - backend
+
+
+  smtp4dev:
+    container_name: todo_smtp4dev
+    image: rnwood/smtp4dev:v3
+    restart: always
+    ports:
+      - "5000:80"
+      - "25:25"
+      - "143:143"
+    volumes:
+      - smtp4dev-data:/smtp4dev
+    environment:
+      - ServerOptions__HostName=smtp4dev
+
+volumes:
+  smtp4dev-data:
