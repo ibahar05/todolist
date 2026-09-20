@@ -81,7 +81,7 @@ const Dashboard = (() => {
     if (el.addTaskBtn) {
       el.addTaskBtn.addEventListener('click', () => {
         openAddForm();
-        if (el.addTaskForm) el.addTaskForm.action = "/task/create/"; // آدرس ساخت تسک جدید
+        if (el.addTaskForm) el.addTaskForm.action = el.addTaskBtn.dataset.createUrl; // آدرس ساخت تسک جدید (از data-attribute گرفته می‌شه)
         const formLabel = document.getElementById('formLabel');
         if (formLabel) formLabel.textContent = "Task name";
       });

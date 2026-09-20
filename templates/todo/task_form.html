@@ -1,4 +1,4 @@
-<form method="POST" action="" class="add-task-form hidden" id="addTaskForm">
+<form method="POST" action="{% url 'todo:create-task' %}" class="add-task-form hidden" id="addTaskForm">
   {% csrf_token %}
   <div class="form-row">
     <div class="form-group">
