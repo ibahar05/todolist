@@ -14,3 +14,10 @@ black
 
 pytest 
 pytest-django
+
+Faker
+
+celery
+redis
+
+gunicorn
