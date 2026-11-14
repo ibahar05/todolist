@@ -19,3 +19,5 @@ Faker
 
 celery
 redis
+
+gunicorn

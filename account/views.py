@@ -2,7 +2,6 @@ from django.shortcuts import redirect, render
 from django.views import View
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth import authenticate, login, logout
-from account.tasks import sendEmail
 from django.http import HttpResponse
 
 
@@ -50,6 +49,3 @@ class LogoutView(View):
         logout(request)
         return redirect("account:login")
 
-def send_email(request):
-    sendEmail.delay()
-    return HttpResponse("Done sending")

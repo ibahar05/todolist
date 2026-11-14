@@ -18,5 +18,7 @@ services:
       - DEBUG=True
     depends_on:
       - redis
+    environment:
+      - DEBUG=True
   
   
